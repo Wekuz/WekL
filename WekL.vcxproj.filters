@@ -22,7 +22,7 @@
   <ItemGroup>
     <None Include="src\TODO.md" />
     <None Include="README.md" />
-    <None Include="src\Examples\helloworld.wekl" />
-    <None Include="src\Examples\math.wekl" />
+    <None Include="Examples\helloworld.wekl" />
+    <None Include="Examples\math.wekl" />
   </ItemGroup>
 </Project>
