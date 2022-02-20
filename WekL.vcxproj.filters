@@ -20,8 +20,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="TODO.md" />
-    <None Include="Examples\helloworld.wekl" />
-    <None Include="main.wekl" />
+    <None Include="src\TODO.md" />
+    <None Include="README.md" />
+    <None Include="src\Examples\helloworld.wekl" />
+    <None Include="src\Examples\math.wekl" />
   </ItemGroup>
 </Project>

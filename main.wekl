@@ -1,1 +1,8 @@
-"Hello" outspop
+"2"
+"2"
+add
+if "\$" = "4"
+{
+"\$"
+outs
+}

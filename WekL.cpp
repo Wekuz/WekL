@@ -5,17 +5,32 @@
 using std::cout;
 using std::string;
 
+void error(int errCode, const char* msg, unsigned line = 0)
+{
+	if (line >= 0)
+		cout << "\u001b[31m---\nE" << errCode << " (line " << line << "): " << msg << "\n---\u001b[0m";
+	else
+		cout << "\u001b[31m---\nE" << errCode << ": " << msg << "\n---\u001b[0m";
+	exit(errCode);
+}
+
 int main(int argc, char** argv)
 {
+	if (argc <= 1)
+	{
+		error(1, "No file specified!");
+	}
 	if (string(argv[1]).substr(string(argv[1]).length() - 5) != ".wekl")
 	{
-		cout << "File isn't WEKL program!";
-		return 1;
+		error(1, "File isn't WEKL program!");
 	}
 	std::ifstream file(argv[1]);
 	string line, tmp;
+	int lineCounter = 1;
 	std::vector<string> stack;
-	bool special_char = false, in_string = false, in_if = false, in_loop = false;
+	bool special_char = false, in_string = false;
+	int if_dec_state = 0, if_state = 0;
+	string if_value1, if_value2;
 	if (file.is_open())
 	{
 		while (getline(file, line))
@@ -30,6 +45,12 @@ int main(int argc, char** argv)
 					tmp.pop_back();
 					continue;
 				}
+				//Ignore comment
+				if (in_string != true && tmp == "//")
+				{
+					tmp.clear();
+					break;
+				}
 
 				//String operations
 				if (in_string)
@@ -38,7 +59,18 @@ int main(int argc, char** argv)
 					{
 						in_string = false;
 						tmp.pop_back();
-						stack.push_back(tmp);
+						if (if_dec_state == 1)
+						{
+							if_dec_state = 2;
+							if_value1 = tmp;
+						}
+						else if (if_dec_state == 2)
+						{
+							if_dec_state = 3;
+							if_value2 = tmp;
+						}
+						else
+							stack.push_back(tmp);
 						tmp.clear();
 					}
 					else if (special_char)
@@ -57,6 +89,10 @@ int main(int argc, char** argv)
 							tmp.pop_back();
 							tmp.push_back('\\');
 							break;
+						case '\$':
+							tmp.pop_back();
+							tmp.append(stack.back());
+							break;
 						default:
 							break;
 						}
@@ -70,47 +106,121 @@ int main(int argc, char** argv)
 				}
 				else if (tmp.back() == '\"' && in_string == false)
 				{
-					tmp.clear();
 					in_string = true;
+					tmp.clear();
 				}
 
-				//Standard functions
-				if (!in_string)
+				//Non-string operations
+				else if (!in_string)
 				{
-					if (tmp == "out")
+					if (if_dec_state != 4)
 					{
-						cout << stack.at(stack.size() - 1);
-						tmp.clear();
+						if (tmp == "outs")
+						{
+							if (stack.size() <= 0)
+							{
+								error(2, "Tried to access stack, but it was empty!", lineCounter);
+							}
+							cout << stack.back();
+							tmp.clear();
+						}
+						else if (tmp == "pop")
+						{
+							if (stack.size() <= 0)
+							{
+								error(2, "Tried to access stack, but it was empty!", lineCounter);
+							}
+							stack.pop_back();
+							tmp.clear();
+						}
+						else if (tmp == "dup")
+						{
+							if (stack.size() <= 0)
+							{
+								error(2, "Tried to access stack, but it was empty!", lineCounter);
+							}
+							stack.push_back(stack.back());
+							tmp.clear();
+						}
+						else if (tmp == "add")
+						{
+							if (stack.size() <= 1)
+							{
+								error(3, "Tried to access stack, but it had less than 2 values!", lineCounter);
+								return 1;
+							}
+							stack.push_back(std::to_string(std::stoi(stack.at(0)) + std::stoi(stack.at(1))));
+							tmp.clear();
+						}
+						else if (tmp == "sub")
+						{
+							if (stack.size() <= 1)
+							{
+								error(3, "Tried to access stack, but it had less than 2 values!", lineCounter);
+								return 1;
+							}
+							stack.push_back(std::to_string(std::stoi(stack.at(0)) - std::stoi(stack.at(1))));
+							tmp.clear();
+						}
+						else if (tmp == "if")
+						{
+							if (if_dec_state == 0)
+								if_dec_state = 1;
+							tmp.clear();
+						}
+						else if (tmp == "=")
+						{
+							if (if_dec_state == 2)
+							{
+								if_state = 1;
+							}
+							tmp.clear();
+						}
+						else if (tmp == "<")
+						{
+							if (if_dec_state == 2)
+							{
+								if_state = 2;
+							}
+							tmp.clear();
+						}
+						else if (tmp == ">")
+						{
+							if (if_dec_state == 2)
+							{
+								if_state = 3;
+							}
+							tmp.clear();
+						}
+						else if (tmp == "{")
+						{
+							if ((if_state == 1 && if_value1 == if_value2) || (if_state == 2 && if_value1 < if_value2) || (if_state == 3 && if_value1 > if_value2))
+							{
+								if_dec_state = 0;
+								if_dec_state = 0;
+							}
+							else
+							{
+								if_dec_state = 4;
+								if_state = 0;
+							}
+							tmp.clear();
+						}
 					}
-					else if (tmp == "pop")
+					else if (if_dec_state == 4 && tmp.back() == '}')
 					{
-						stack.pop_back();
-						tmp.clear();
-					}
-					if (tmp == "if")
-					{
-						in_if = true;
-					}
-					else if (tmp == "fi")
-					{
-						in_if = false;
-					}
-					if (tmp == "loop")
-					{
-						in_loop = true;
-					}
-					else if (tmp == "pool")
-					{
-						in_loop = false;
+						if_dec_state = 0;
 					}
 				}
 			}
+			lineCounter++;
 		}
 		file.close();
 	}
 	else
 	{
-		cout << "Couldn't open file!";
-		return 1;
+	error(1, "Couldn't open file!");
 	}
+
+	return 0;
 }
