@@ -139,7 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="WekL.cpp" />
+    <ClCompile Include="src\WekL.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
