@@ -2,15 +2,13 @@
 #include <fstream>
 #include <string>
 #include <vector>
-using std::cout;
-using std::string;
 
 void error(int errCode, const char* msg, unsigned line = 0)
 {
 	if (line >= 0)
-		cout << "\u001b[31m---\nE" << errCode << " (line " << line << "): " << msg << "\n---\u001b[0m";
+		std::cout << "\u001b[31m---\nE" << errCode << " (line " << line << "): " << msg << "\n---\u001b[0m";
 	else
-		cout << "\u001b[31m---\nE" << errCode << ": " << msg << "\n---\u001b[0m";
+		std::cout << "\u001b[31m---\nE" << errCode << ": " << msg << "\n---\u001b[0m";
 	exit(errCode);
 }
 
@@ -20,17 +18,17 @@ int main(int argc, char** argv)
 	{
 		error(1, "No file specified!");
 	}
-	if (string(argv[1]).substr(string(argv[1]).length() - 5) != ".wekl")
+	if (std::string(argv[1]).substr(std::string(argv[1]).length() - 5) != ".wekl")
 	{
 		error(1, "File isn't WEKL program!");
 	}
 	std::ifstream file(argv[1]);
-	string line, tmp;
+	std::string line, tmp;
 	int lineCounter = 1;
-	std::vector<string> stack;
+	std::vector<std::string> stack;
 	bool special_char = false, in_string = false;
 	int if_dec_state = 0, if_state = 0;
-	string if_value1, if_value2;
+	std::string if_value1, if_value2;
 	if (file.is_open())
 	{
 		while (getline(file, line))
@@ -52,7 +50,7 @@ int main(int argc, char** argv)
 					break;
 				}
 
-				//String operations
+				//std::string operations
 				if (in_string)
 				{
 					if (tmp.back() == '\"')
@@ -110,7 +108,7 @@ int main(int argc, char** argv)
 					tmp.clear();
 				}
 
-				//Non-string operations
+				//Non-std::string operations
 				else if (!in_string)
 				{
 					if (if_dec_state != 4)
@@ -121,7 +119,7 @@ int main(int argc, char** argv)
 							{
 								error(2, "Tried to access stack, but it was empty!", lineCounter);
 							}
-							cout << stack.back();
+							std::cout << stack.back();
 							tmp.clear();
 						}
 						else if (tmp == "pop")
