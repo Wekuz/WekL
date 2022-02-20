@@ -10,6 +10,8 @@ Functions
 `dup` - Duplicates the value at the top of the stack
 `add` - Pushes the value of the first value at the top of the stack + the second value at the top of the stack
 `sub` - Pushes the value of the first value at the top of the stack - the second value at the top of the stack
+`mul` - Pushes the value of the first value at the top of the stack * the second value at the top of the stack
+`div` - Pushes the value of the first value at the top of the stack / the second value at the top of the stack
 `if` - After this comes statement and if the statement is true executes the code in { }, else skips the code
 
 Special characters
