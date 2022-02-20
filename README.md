@@ -4,6 +4,7 @@ My try at making a programming language.
 
 Functions
 -
+- `//` - Everything after this on the same line is comment
 - `"`_value_`"` - Pushes the value to the stack
 - `pop` - Removes the value at the top of the stack
 - `outs` - Prints the value at the top of the stack
