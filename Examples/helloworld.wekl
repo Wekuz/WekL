@@ -1,0 +1,2 @@
+"Hello world!" //Pushes 'Hello world!' on top of the stack
+outs //Prints the value on top of the stack ('Hello world!')
