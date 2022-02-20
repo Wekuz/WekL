@@ -50,7 +50,7 @@ int main(int argc, char** argv)
 					break;
 				}
 
-				//std::string operations
+				//String operations
 				if (in_string)
 				{
 					if (tmp.back() == '\"')
@@ -108,7 +108,7 @@ int main(int argc, char** argv)
 					tmp.clear();
 				}
 
-				//Non-std::string operations
+				//Non-string operations
 				else if (!in_string)
 				{
 					if (if_dec_state != 4)
