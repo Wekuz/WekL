@@ -162,6 +162,26 @@ int main(int argc, char** argv)
 							stack.push_back(std::to_string(std::stoi(stack.at(0)) - std::stoi(stack.at(1))));
 							tmp.clear();
 						}
+						else if (tmp == "mul")
+						{
+							if (stack.size() <= 1)
+							{
+								error(3, "Tried to access stack, but it had less than 2 values!", lineCounter);
+								return 1;
+							}
+							stack.push_back(std::to_string(std::stoi(stack.at(0)) * std::stoi(stack.at(1))));
+							tmp.clear();
+						}
+						else if (tmp == "div")
+						{
+							if (stack.size() <= 1)
+							{
+								error(3, "Tried to access stack, but it had less than 2 values!", lineCounter);
+								return 1;
+							}
+							stack.push_back(std::to_string(std::stoi(stack.at(0)) / std::stoi(stack.at(1))));
+							tmp.clear();
+						}
 						else if (tmp == "if")
 						{
 							if (if_dec_state == 0)
