@@ -143,8 +143,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
-    <None Include="Examples\helloworld.wekl" />
-    <None Include="Examples\math.wekl" />
     <None Include="src\TODO.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
