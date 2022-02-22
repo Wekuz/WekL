@@ -194,6 +194,14 @@ int main(int argc, char** argv)
 							}
 							tmp.clear();
 						}
+						else if (tmp == "!")
+						{
+							if (if_dec_state == 2)
+							{
+								if_state = 4;
+							}
+							tmp.clear();
+						}
 						else if (tmp == "<")
 						{
 							if (if_dec_state == 2)
@@ -212,7 +220,7 @@ int main(int argc, char** argv)
 						}
 						else if (tmp == "{")
 						{
-							if ((if_state == 1 && if_value1 == if_value2) || (if_state == 2 && if_value1 < if_value2) || (if_state == 3 && if_value1 > if_value2))
+							if ((if_state == 1 && if_value1 == if_value2) || (if_state == 2 && if_value1 < if_value2) || (if_state == 3 && if_value1 > if_value2) || (if_state == 4 && if_value1 != if_value2))
 							{
 								if_dec_state = 0;
 								if_dec_state = 0;
