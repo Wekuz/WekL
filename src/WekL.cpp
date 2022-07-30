@@ -15,13 +15,9 @@ void error(int errCode, const char* msg, unsigned line = 0)
 int main(int argc, char** argv)
 {
 	if (argc <= 1)
-	{
 		error(1, "No file specified!");
-	}
 	if (std::string(argv[1]).substr(std::string(argv[1]).length() - 5) != ".wekl")
-	{
 		error(1, "File isn't WEKL program!");
-	}
 	std::ifstream file(argv[1]);
 	std::string line, tmp;
 	int lineCounter = 1;
@@ -244,9 +240,7 @@ int main(int argc, char** argv)
 		file.close();
 	}
 	else
-	{
-	error(1, "Couldn't open file!");
-	}
+		error(1, "Couldn't open file!");
 
 	return 0;
 }
